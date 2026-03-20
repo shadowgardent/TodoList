@@ -1,5 +1,10 @@
 # 📝 แอปทำรายการสิ่งที่ต้องทำ (Todo List)
 แอปพลิเคชัน Flutter ที่สวยงามและทันสมัยสำหรับจัดการรายการสิ่งที่ต้องทำ พร้อมบันทึกข้อมูลในเครื่องด้วย Hive
+### UI APP
+
+<img width="407" height="852" alt="image" src="https://github.com/user-attachments/assets/81094bff-7575-48c7-96ca-cd8ecbb4c9fb" />
+
+
 
 ## ฟีเจอร์
 -  **เพิ่มรายการ** - สร้างรายการใหม่ผ่านหน้าต่างโต้ตอบที่สวยงาม
@@ -29,5 +34,3 @@ git clone https://github.com/shadowgardent/TodoList.git
 cd TodoList
 
 
-### UI APP
-<img width="577" height="963" alt="image" src="https://github.com/user-attachments/assets/506bccb1-597c-4dc1-92db-5396d03040f8" />
