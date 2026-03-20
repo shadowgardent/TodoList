@@ -16,8 +16,9 @@ class TaskStorage {
     await box.add(task);
   }
 
-  static Future<void> updateTask(Task task, String newTitle) async {
+  static Future<void> updateTask(Task task, String newTitle, String newDescription) async {
     task.title = newTitle;
+    task.description = newDescription;
     await task.save();
   }
 

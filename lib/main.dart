@@ -51,8 +51,11 @@ class _TodoHomePageState extends State<TodoHomePage> {
   }
 
   Future<void> _showAddEditDialog({Task? task}) async {
-    final TextEditingController controller = TextEditingController(
+    final TextEditingController titleController = TextEditingController(
       text: task != null ? task.title : '',
+    );
+    final TextEditingController descriptionController = TextEditingController(
+      text: task != null ? task.description : '',
     );
 
     final result = await showDialog<bool>(
@@ -60,11 +63,22 @@ class _TodoHomePageState extends State<TodoHomePage> {
       builder: (context) {
         return AlertDialog(
           title: Text(task == null ? 'Add Task' : 'Edit Task'),
-          content: TextField(
-            controller: controller,
-            autofocus: true,
-            maxLength: 100,
-            decoration: const InputDecoration(labelText: 'Task title'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: titleController,
+                autofocus: true,
+                maxLength: 100,
+                decoration: const InputDecoration(labelText: 'Task title'),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: descriptionController,
+                maxLines: 3,
+                decoration: const InputDecoration(labelText: 'Description (optional)'),
+              ),
+            ],
           ),
           actions: [
             TextButton(
@@ -74,7 +88,7 @@ class _TodoHomePageState extends State<TodoHomePage> {
             ElevatedButton(
               child: const Text('Save'),
               onPressed: () {
-                if (controller.text.trim().isEmpty) return;
+                if (titleController.text.trim().isEmpty) return;
                 Navigator.of(context).pop(true);
               },
             ),
@@ -84,11 +98,12 @@ class _TodoHomePageState extends State<TodoHomePage> {
     );
 
     if (result == true) {
-      final newTitle = controller.text.trim();
+      final newTitle = titleController.text.trim();
+      final newDescription = descriptionController.text.trim();
       if (task == null) {
-        await TaskStorage.addTask(taskBox, Task(title: newTitle));
+        await TaskStorage.addTask(taskBox, Task(title: newTitle, description: newDescription));
       } else {
-        await TaskStorage.updateTask(task, newTitle);
+        await TaskStorage.updateTask(task, newTitle, newDescription);
       }
     }
   }
@@ -118,6 +133,51 @@ class _TodoHomePageState extends State<TodoHomePage> {
     return shouldDelete == true;
   }
 
+  Future<void> _showTaskDetails(Task task) async {
+    await showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Task Details'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(task.title,
+                  style: const TextStyle(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Text('Status: ${task.isCompleted ? 'Completed' : 'Pending'}'),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Close'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _showAddEditDialog(task: task);
+              },
+              child: const Text('Edit'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                final confirmed = await _confirmDelete(task);
+                if (confirmed) {
+                  await TaskStorage.deleteTask(task);
+                }
+              },
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
+              child: const Text('Delete'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget _buildTaskTile(Task task) {
     return Dismissible(
       key: Key(task.key.toString()),
@@ -142,14 +202,19 @@ class _TodoHomePageState extends State<TodoHomePage> {
         child: ListTile(
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-          leading: CircleAvatar(
-            radius: 20,
-            backgroundColor: task.isCompleted
-                ? Colors.green.shade100
-                : Colors.purple.shade100,
-            child: Icon(
-              task.isCompleted ? Icons.check_circle : Icons.circle_outlined,
-              color: task.isCompleted ? Colors.green.shade700 : Colors.purple,
+          leading: GestureDetector(
+            onTap: () async {
+              await TaskStorage.toggleTaskStatus(task);
+            },
+            child: CircleAvatar(
+              radius: 20,
+              backgroundColor: task.isCompleted
+                  ? Colors.green.shade100
+                  : Colors.purple.shade100,
+              child: Icon(
+                task.isCompleted ? Icons.check_circle : Icons.circle_outlined,
+                color: task.isCompleted ? Colors.green.shade700 : Colors.purple,
+              ),
             ),
           ),
           title: Text(
@@ -163,12 +228,25 @@ class _TodoHomePageState extends State<TodoHomePage> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          subtitle: Text(
-            task.isCompleted ? 'Completed' : 'Pending',
-            style: TextStyle(
-                color: task.isCompleted
-                    ? Colors.green.shade700
-                    : Colors.purple.shade700),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (task.description.isNotEmpty)
+                Text(
+                  task.description,
+                  style: TextStyle(
+                    color: Colors.grey.shade600,
+                    fontSize: 13,
+                  ),
+                ),
+              Text(
+                task.isCompleted ? 'Completed' : 'Pending',
+                style: TextStyle(
+                    color: task.isCompleted
+                        ? Colors.green.shade700
+                        : Colors.purple.shade700),
+              ),
+            ],
           ),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,
@@ -188,9 +266,7 @@ class _TodoHomePageState extends State<TodoHomePage> {
               ),
             ],
           ),
-          onTap: () async {
-            await TaskStorage.toggleTaskStatus(task);
-          },
+          onTap: () => _showTaskDetails(task),
         ),
       ),
     );

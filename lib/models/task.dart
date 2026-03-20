@@ -10,5 +10,8 @@ class Task extends HiveObject {
   @HiveField(1)
   bool isCompleted;
 
-  Task({required this.title, this.isCompleted = false});
+  @HiveField(2)
+  String description;
+
+  Task({required this.title, this.description = '', this.isCompleted = false});
 }
