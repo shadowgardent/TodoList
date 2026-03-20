@@ -1,19 +1,38 @@
-# todo_list
+# 📝 แอปทำรายการสิ่งที่ต้องทำ (Todo List)
 
-A new Flutter project.
+แอปพลิเคชัน Flutter ที่สวยงามและทันสมัยสำหรับจัดการรายการสิ่งที่ต้องทำ พร้อมบันทึกข้อมูลในเครื่องด้วย Hive
 
-## Getting Started
+## ฟีเจอร์
 
-This project is a starting point for a Flutter application.
+-  **เพิ่มรายการ** - สร้างรายการใหม่ผ่านหน้าต่างโต้ตอบที่สวยงาม
+-  **แก้ไขรายการ** - แก้ไขชื่อรายการที่มีอยู่
+- **ทำเครื่องหมายเสร็จสิ้น** - สลับสถานะระหว่างรอดำเนินการและเสร็จสิ้น
+-  **ลบรายการ** - ลบรายการพร้อมยืนยันการลบ
+-  **บันทึกในเครื่อง** - เก็บข้อมูลด้วยฐานข้อมูล Hive
+-  **ออกแบบทันสมัย** - ธีมสีม่วงกรเดียนต์พร้อมแอนิเมชั่น
+-  **ตอบสนองต่อขนาดหน้าจอ** - ทำงานได้ลื่นไหลบนทุกอุปกรณ์
+-  **จัดระเบียบรายการ** - แยกรายการรอดำเนินการและเสร็จสิ้นโดยอัตโนมัติ
 
-A few resources to get you started if this is your first Flutter project:
+##  เทคโนโลยีที่ใช้
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- **Flutter** - แฟรมเวิร์กพัฒนาแอปมือถือ
+- **Dart** - ภาษาโปรแกรมมิง
+- **Hive** - ฐานข้อมูลท้องถิ่นที่เร็ว
+- **build_runner** - เครื่องมือสร้างโค้ด
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+##  การติดตั้ง
+
+### ข้อกำหนดเบื้องต้น
+- Flutter SDK (รุ่น 3.0 ขึ้นไป)
+- Dart SDK (มากับ Flutter)
+- Android Emulator หรือ iOS Simulator (หรืออุปกรณ์จริง)
+
+### ขั้นตอน
+
+1. ดาวน์โหลดโปรเจกต์:
+```bash
+git clone https://github.com/shadowgardent/TodoList.git
+cd TodoList
 
 UI APP
 
